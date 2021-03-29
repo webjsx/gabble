@@ -9,13 +9,16 @@ TBH, gabble doesn't do much. It simply finds JS files in a folder you specify, r
 Basic usage:
 
 ```sh
-npx gabble -s <source_dir> -o <output_dir> [options]
+npx gabble -s /your/source/dir -o /your/output/dir [options]
 ```
 
 Options:
 
 ```
 --noext : generate directories with index.html instead of pagename.html
+--tabsize <num> : tabsize to use during beautification.
+--help : print these options
+--version : print the version
 ```
 
 
