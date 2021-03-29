@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 import yargs from "yargs";
-import * as fs from "fs";
-import * as path from "path";
-import { join } from "path";
 import * as beautify from "js-beautify";
+import * as path from "path";
+import * as fs from "fs";
 
 function error(message: string) {
   throw new Error(message);
@@ -29,10 +28,15 @@ const argv = yargs(process.argv.slice(2))
       describe: "Do not use html extension for files.",
       default: false,
     },
+    tabsize: {
+      type: "number",
+      describe: "Indentation for HTML formatting. Defaults to 2.",
+      default: 2,
+    },
   }).argv;
 
 const sourceDir = path.resolve(argv.s);
-const outputDir = path.resolve(argv.s);
+const outputDir = path.resolve(argv.o);
 
 function getFiles(dir: string) {
   const files: string[] = [];
@@ -64,17 +68,35 @@ for (const file of files) {
 
   if (Array.isArray(pageResult)) {
     for (const result of pageResult) {
-      const newPath = path.resolve(outputDir, result.path);
+      const newPath = path.resolve(outputDir, result.path.replace(/\.js$/, ".html"));
       writeFile(newPath, result.html);
     }
   } else {
     const relativePath = file.replace(sourceDir + "/", "");
-    const newPath = path.resolve(outputDir, relativePath);
+    const newPath = path.resolve(
+      outputDir,
+      relativePath.replace(/\.js$/, ".html")
+    );
     writeFile(newPath, pageResult);
   }
 }
 
 function writeFile(fullPath: string, contents: string) {
-  const formatted = beautify.html(contents);
-  fs.writeFileSync(fullPath, formatted);
+  const outputDir = path.dirname(fullPath);
+  const filename = path.basename(fullPath);
+  const filenameWithoutExt = filename.replace(".html", "");
+
+  const { finalDir, finalFilename } =
+    argv.noext && filename !== "index.html"
+      ? {
+          finalDir: path.resolve(outputDir, filenameWithoutExt),
+          finalFilename: "index.html",
+        }
+      : { finalDir: outputDir, finalFilename: filename };
+
+  if (!fs.existsSync(finalDir)) {
+    fs.mkdirSync(finalDir);
+  }
+  const formatted = beautify.html(contents, { indent_size: argv.tabsize });
+  fs.writeFileSync(path.resolve(finalDir, finalFilename), formatted);
 }
