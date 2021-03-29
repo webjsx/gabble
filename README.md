@@ -17,6 +17,7 @@ Options:
 ```
 --noext : generate directories with index.html instead of pagename.html
 --tabsize <num> : tabsize to use during beautification.
+--ignoreerrors : Ignore errors in page and continue to next page.
 --help : print these options
 --version : print the version
 ```

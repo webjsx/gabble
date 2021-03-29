@@ -4,6 +4,7 @@ import yargs from "yargs";
 import * as beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
+import * as mkdirp from "mkdirp";
 
 function error(message: string) {
   throw new Error(message);
@@ -32,6 +33,11 @@ const argv = yargs(process.argv.slice(2))
       type: "number",
       describe: "Indentation for HTML formatting. Defaults to 2.",
       default: 2,
+    },
+    ignoreerrors: {
+      type: "boolean",
+      describe: "Ignore compilation errors and move to the next page.",
+      default: false,
     },
   }).argv;
 
@@ -63,21 +69,29 @@ type PageResult = {
 }[];
 
 for (const file of files) {
-  const page = require(file).default;
-  const pageResult: string | PageResult = page();
+  try {
+    const page = require(file).default;
+    const pageResult: string | PageResult = page();
 
-  if (Array.isArray(pageResult)) {
-    for (const result of pageResult) {
-      const newPath = path.resolve(outputDir, result.path.replace(/\.js$/, ".html"));
-      writeFile(newPath, result.html);
+    if (Array.isArray(pageResult)) {
+      for (const result of pageResult) {
+        const newPath = path.resolve(
+          outputDir,
+          result.path.replace(/\.js$/, ".html")
+        );
+        writeFile(newPath, result.html);
+      }
+    } else {
+      const relativePath = file.replace(sourceDir + "/", "");
+      const newPath = path.resolve(
+        outputDir,
+        relativePath.replace(/\.js$/, ".html")
+      );
+      writeFile(newPath, pageResult);
     }
-  } else {
-    const relativePath = file.replace(sourceDir + "/", "");
-    const newPath = path.resolve(
-      outputDir,
-      relativePath.replace(/\.js$/, ".html")
-    );
-    writeFile(newPath, pageResult);
+  } catch (ex) {
+    console.log(ex.toString());
+    console.log(`Skipped ${file}.`);
   }
 }
 
@@ -95,7 +109,7 @@ function writeFile(fullPath: string, contents: string) {
       : { finalDir: outputDir, finalFilename: filename };
 
   if (!fs.existsSync(finalDir)) {
-    fs.mkdirSync(finalDir);
+    mkdirp.sync(finalDir);
   }
   const formatted = beautify.html(contents, { indent_size: argv.tabsize });
   fs.writeFileSync(path.resolve(finalDir, finalFilename), formatted);
