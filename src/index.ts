@@ -70,7 +70,7 @@ function getFiles(dir: string) {
 const files = getFiles(sourceDir).filter((x) => x.endsWith(".js"));
 
 type PageResult = {
-  path: string;
+  path?: string;
   html: string;
 };
 
@@ -79,19 +79,19 @@ for (const file of files) {
     const page = require(file).default;
     const pageResult: PageResult[] | PageResult = page();
 
+    const relativePath = file.replace(sourceDir + "/", "");
     if (Array.isArray(pageResult)) {
       for (const result of pageResult) {
         const newPath = path.resolve(
           outputDir,
-          result.path.replace(/\.js$/, ".html")
+          (result.path || relativePath).replace(/\.js$/, ".html")
         );
         writeFile(newPath, result.html);
       }
     } else {
-      const relativePath = file.replace(sourceDir + "/", "");
       const newPath = path.resolve(
         outputDir,
-        relativePath.replace(/\.js$/, ".html")
+        (pageResult.path || relativePath).replace(/\.js$/, ".html")
       );
       writeFile(newPath, pageResult.html);
     }
