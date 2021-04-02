@@ -66,12 +66,12 @@ const files = getFiles(sourceDir).filter((x) => x.endsWith(".js"));
 type PageResult = {
   path: string;
   html: string;
-}[];
+};
 
 for (const file of files) {
   try {
     const page = require(file).default;
-    const pageResult: string | PageResult = page();
+    const pageResult: PageResult[] | PageResult = page();
 
     if (Array.isArray(pageResult)) {
       for (const result of pageResult) {
@@ -87,7 +87,7 @@ for (const file of files) {
         outputDir,
         relativePath.replace(/\.js$/, ".html")
       );
-      writeFile(newPath, pageResult);
+      writeFile(newPath, pageResult.html);
     }
   } catch (ex) {
     console.log(ex.toString());
