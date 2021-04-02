@@ -19,6 +19,11 @@ const argv = yargs(process.argv.slice(2))
       describe: "The source directory. Should contain the pages.",
       demandOption: true,
     },
+    x: {
+      type: "array",
+      describe:
+        "Directory names to exclude. For example, 'components'. This prevents all directories named 'components' inside the pages directory from being treated as pages.",
+    },
     o: {
       type: "string",
       describe: "The output directory.",
@@ -43,6 +48,7 @@ const argv = yargs(process.argv.slice(2))
 
 const sourceDir = path.resolve(argv.s);
 const outputDir = path.resolve(argv.o);
+const excludeDirs = argv.x?.map((x) => x.toString()) || [];
 
 function getFiles(dir: string) {
   const files: string[] = [];
@@ -52,7 +58,7 @@ function getFiles(dir: string) {
   });
 
   for (const entry of entries) {
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && !excludeDirs.includes(entry.name)) {
       files.push(...getFiles(path.join(dir, entry.name)));
     } else {
       files.push(path.join(dir, entry.name));
