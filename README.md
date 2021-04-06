@@ -2,7 +2,7 @@
 
 Gabble is a static site generator for Node.JS. It's framework agnostic, so you can use it with your framework of choice - as long is they support server-side rendering.
 
-TBH, gabble doesn't do much. It simply finds JS files in a folder you specify, runs the default export on each of those files (default export should be a function), takes the html property from the output, and writes it to an html file.
+TBH, gabble doesn't do much. It simply finds JS files in a folder you specify, runs the default export on each of those files (default export should be a function), and writes the output to an html file.
 
 ## Usage
 
@@ -32,7 +32,7 @@ Options:
 
 ## Pages
 
-The default function of each page (under the pages directory) should return the following type or an array of the following type.
+The default function of each page (under the pages directory) should return the following type (ContentDetails) or an array of ContentDetails.
 
 ```ts
 type ContentDetails = {
@@ -43,7 +43,7 @@ type ContentDetails = {
 type PageResult = ContentDetails | ContentDetails[];
 ```
 
-So a page will look like this:
+Here's an example pagename.js file:
 
 ```js
 export default function html() {
@@ -80,3 +80,7 @@ export default function html() {
   ];
 }
 ```
+
+## Examples
+
+Check out examples at https://github.com/forgojs/gabble-examples. That's probably the easiest way to get started.
