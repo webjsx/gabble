@@ -29,6 +29,11 @@ const argv = yargs(process.argv.slice(2))
       describe: "The output directory.",
       demandOption: true,
     },
+    init: {
+      type: "string",
+      describe:
+        "Require this file before compiling pages. This could be used to initialize the environment.",
+    },
     noext: {
       type: "boolean",
       describe: "Do not use html extension for files.",
@@ -49,6 +54,7 @@ const argv = yargs(process.argv.slice(2))
 const sourceDir = path.resolve(argv.s);
 const outputDir = path.resolve(argv.o);
 const excludeDirs = argv.x?.map((x) => x.toString()) || [];
+const requireFile = argv.init ? path.resolve(argv.init) : undefined;
 
 function getFiles(dir: string) {
   const files: string[] = [];
@@ -73,6 +79,10 @@ type PageResult = {
   path?: string;
   html: string;
 };
+
+if (requireFile) {
+  require(requireFile);
+}
 
 for (const file of files) {
   try {
