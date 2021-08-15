@@ -66,7 +66,7 @@ function getFiles(dir: string) {
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
-    const excluded = !excludedPaths.some((excludedPath) =>
+    const excluded = excludedPaths.some((excludedPath) =>
       fullPath.endsWith(excludedPath)
     );
     if (entry.isDirectory()) {
