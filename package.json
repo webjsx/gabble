@@ -1,6 +1,6 @@
 {
   "name": "gabble",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "repository": {
     "type": "git",
@@ -15,14 +15,14 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@types/js-beautify": "^1.13.1",
-    "@types/mkdirp": "^1.0.1",
-    "@types/yargs": "^16.0.0",
-    "js-beautify": "^1.13.5",
+    "@types/js-beautify": "^1.13.2",
+    "@types/mkdirp": "^1.0.2",
+    "@types/yargs": "^17.0.2",
+    "js-beautify": "^1.14.0",
     "mkdirp": "^1.0.4",
-    "yargs": "^16.2.0"
+    "yargs": "^17.1.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.35"
+    "@types/node": "^16.6.1"
   }
 }

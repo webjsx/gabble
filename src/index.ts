@@ -1,14 +1,10 @@
 #!/usr/bin/env node
 
-import yargs from "yargs";
+import yargs = require("yargs");
 import * as beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";
-
-function error(message: string) {
-  throw new Error(message);
-}
 
 const argv = yargs(process.argv.slice(2))
   .scriptName("gabble")
@@ -49,7 +45,8 @@ const argv = yargs(process.argv.slice(2))
       describe: "Ignore compilation errors and move to the next page.",
       default: false,
     },
-  }).argv;
+  })
+  .parseSync();
 
 const sourceDir = path.resolve(argv.s);
 const outputDir = path.resolve(argv.o);
@@ -86,10 +83,15 @@ if (requireFile) {
 
 for (const file of files) {
   try {
-    const page = require(file).default;
-    const pageResult: PageResult[] | PageResult = page();
-
     const relativePath = file.replace(sourceDir + "/", "");
+    const pageGeneratorOpts = {
+      filePath: file,
+      relativePath,
+    };
+
+    const page = require(file).default;
+    const pageResult: PageResult[] | PageResult = page(pageGeneratorOpts);
+
     if (Array.isArray(pageResult)) {
       for (const result of pageResult) {
         const newPath = path.resolve(
