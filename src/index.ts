@@ -50,7 +50,11 @@ const argv = yargs(process.argv.slice(2))
 
 const sourceDir = path.resolve(argv.s);
 const outputDir = path.resolve(argv.o);
-const excludeDirs = argv.x?.map((x) => x.toString()) || [];
+
+const excludedPaths = (argv.x?.map((x) => x.toString()) || []).map(
+  (excludedPath) =>
+    excludedPath.startsWith("/") ? excludedPath : `/${excludedPath}`
+);
 const requireFile = argv.init ? path.resolve(argv.init) : undefined;
 
 function getFiles(dir: string) {
@@ -61,10 +65,18 @@ function getFiles(dir: string) {
   });
 
   for (const entry of entries) {
-    if (entry.isDirectory() && !excludeDirs.includes(entry.name)) {
-      files.push(...getFiles(path.join(dir, entry.name)));
+    const fullPath = path.join(dir, entry.name);
+    const excluded = !excludedPaths.some((excludedPath) =>
+      fullPath.endsWith(excludedPath)
+    );
+    if (entry.isDirectory()) {
+      if (!excluded) {
+        files.push(...getFiles(path.join(dir, entry.name)));
+      }
     } else {
-      files.push(path.join(dir, entry.name));
+      if (!excluded) {
+        files.push(path.join(dir, entry.name));
+      }
     }
   }
   return files;
