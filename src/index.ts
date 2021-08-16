@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import yargs from "yargs";
+import yargs = require("yargs");
 import * as beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
@@ -82,49 +82,6 @@ function getFiles(dir: string) {
   return files;
 }
 
-const files = getFiles(sourceDir).filter((x) => x.endsWith(".js"));
-
-type PageResult = {
-  path?: string;
-  html: string;
-};
-
-if (requireFile) {
-  require(requireFile);
-}
-
-for (const file of files) {
-  try {
-    const relativePath = file.replace(sourceDir + "/", "");
-    const pageGeneratorOpts = {
-      filePath: file,
-      relativePath,
-    };
-
-    const page = require(file).default;
-    const pageResult: PageResult[] | PageResult = await page(pageGeneratorOpts);
-
-    if (Array.isArray(pageResult)) {
-      for (const result of pageResult) {
-        const newPath = path.resolve(
-          outputDir,
-          (result.path || relativePath).replace(/\.js$/, ".html")
-        );
-        writeFile(newPath, result.html);
-      }
-    } else {
-      const newPath = path.resolve(
-        outputDir,
-        (pageResult.path || relativePath).replace(/\.js$/, ".html")
-      );
-      writeFile(newPath, pageResult.html);
-    }
-  } catch (ex) {
-    console.log(ex.toString());
-    console.log(`Skipped ${file}.`);
-  }
-}
-
 function writeFile(fullPath: string, contents: string) {
   const outputDir = path.dirname(fullPath);
   const filename = path.basename(fullPath);
@@ -144,3 +101,52 @@ function writeFile(fullPath: string, contents: string) {
   const formatted = beautify.html(contents, { indent_size: argv.tabsize });
   fs.writeFileSync(path.resolve(finalDir, finalFilename), formatted);
 }
+
+async function run() {
+  const files = getFiles(sourceDir).filter((x) => x.endsWith(".js"));
+
+  type PageResult = {
+    path?: string;
+    html: string;
+  };
+
+  if (requireFile) {
+    require(requireFile);
+  }
+
+  for (const file of files) {
+    try {
+      const relativePath = file.replace(sourceDir + "/", "");
+      const pageGeneratorOpts = {
+        filePath: file,
+        relativePath,
+      };
+
+      const page = require(file).default;
+      const pageResult: PageResult[] | PageResult = await page(
+        pageGeneratorOpts
+      );
+
+      if (Array.isArray(pageResult)) {
+        for (const result of pageResult) {
+          const newPath = path.resolve(
+            outputDir,
+            (result.path || relativePath).replace(/\.js$/, ".html")
+          );
+          writeFile(newPath, result.html);
+        }
+      } else {
+        const newPath = path.resolve(
+          outputDir,
+          (pageResult.path || relativePath).replace(/\.js$/, ".html")
+        );
+        writeFile(newPath, pageResult.html);
+      }
+    } catch (ex) {
+      console.log(ex.toString());
+      console.log(`Skipped ${file}.`);
+    }
+  }
+}
+
+run();

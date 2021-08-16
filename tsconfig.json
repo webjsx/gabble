@@ -2,8 +2,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "allowJs": false,
-    "target": "es2017",
-    "module": "esnext",
+    "target": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2020"],
     "sourceMap": true,
