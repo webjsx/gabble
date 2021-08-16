@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import yargs = require("yargs");
+import yargs from "yargs";
 import * as beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
@@ -102,7 +102,7 @@ for (const file of files) {
     };
 
     const page = require(file).default;
-    const pageResult: PageResult[] | PageResult = page(pageGeneratorOpts);
+    const pageResult: PageResult[] | PageResult = await page(pageGeneratorOpts);
 
     if (Array.isArray(pageResult)) {
       for (const result of pageResult) {
