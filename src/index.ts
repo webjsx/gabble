@@ -134,6 +134,7 @@ async function run() {
             (result.path || relativePath).replace(/\.js$/, ".html")
           );
           writeFile(newPath, result.html);
+          console.log(`Generated ${newPath}`);
         }
       } else {
         const newPath = path.resolve(
@@ -141,6 +142,7 @@ async function run() {
           (pageResult.path || relativePath).replace(/\.js$/, ".html")
         );
         writeFile(newPath, pageResult.html);
+        console.log(`Generated ${newPath}`);
       }
     } catch (ex) {
       console.log(ex.toString());
