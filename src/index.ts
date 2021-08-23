@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import yargs from "yargs";
-import * as beautify from "js-beautify";
+import beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";
