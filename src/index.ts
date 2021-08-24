@@ -4,7 +4,7 @@ import yargs from "yargs";
 import beautify from "js-beautify";
 import * as path from "path";
 import * as fs from "fs";
-import * as mkdirp from "mkdirp";
+import mkdirp from "mkdirp";
 
 const argv = yargs(process.argv.slice(2))
   .scriptName("gabble")
