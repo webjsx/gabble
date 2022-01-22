@@ -156,7 +156,7 @@ async function run() {
           }`
         );
       }
-    } catch (ex) {
+    } catch (ex: any) {
       console.log(ex.toString());
       console.log(`Skipped ${file}.`);
     }
