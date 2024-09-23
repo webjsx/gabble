@@ -45,6 +45,11 @@ const argv = yargs(process.argv.slice(2))
       describe: "Ignore compilation errors and move to the next page.",
       default: false,
     },
+    debug: {
+      type: "boolean",
+      describe: "Print detailed stack trace for errors.",
+      default: false,
+    },
   })
   .parseSync();
 
@@ -157,7 +162,11 @@ async function run() {
         );
       }
     } catch (ex: any) {
-      console.log(ex.toString());
+      if (argv.debug) {
+        console.error(ex.stack);
+      } else {
+        console.log(ex.toString());
+      }
       console.log(`Skipped ${file}.`);
     }
   }
