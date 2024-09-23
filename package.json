@@ -1,12 +1,12 @@
 {
   "name": "gabble",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "main": "dist/index.js",
   "type": "module",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/forgojs/gabble"
+    "url": "https://github.com/webjsx/gabble"
   },
   "bin": {
     "gabble": "dist/index.js"
@@ -17,16 +17,16 @@
     "build": "npm run clean && mkdir -p dist && npx tsc"
   },
   "dependencies": {
-    "@types/js-beautify": "^1.13.3",
-    "@types/mkdirp": "^1.0.2",
-    "@types/node": "^17.0.10",
-    "@types/yargs": "^17.0.8",
-    "js-beautify": "^1.14.0",
-    "mkdirp": "^1.0.4",
-    "yargs": "^17.3.1"
+    "@types/js-beautify": "^1.14.3",
+    "@types/mkdirp": "^2.0.0",
+    "@types/node": "^22.5.5",
+    "@types/yargs": "^17.0.33",
+    "js-beautify": "^1.15.1",
+    "mkdirp": "^3.0.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "typescript": "^4.5.5"
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.2"
   }
 }

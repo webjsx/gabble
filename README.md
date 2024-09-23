@@ -83,4 +83,4 @@ export default function html() {
 
 ## Examples
 
-Check out examples at https://github.com/forgojs/gabble-examples. That's probably the easiest way to get started.
+Check out examples at https://github.com/webjsx/gabble-examples. That's probably the easiest way to get started.
